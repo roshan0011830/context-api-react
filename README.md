@@ -46,7 +46,7 @@ file ke top par likho (component ke bahar)
 
 export const productContext = createContext();
 
----
+```
 
 ## ✅ Step 3: Context Provider Component banao
 
@@ -76,7 +76,7 @@ function Context({ children }) {
 export default Context;
 
 
-
+```
 ---
 
 ## ✅ Step 4: App ko wrap karo
