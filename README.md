@@ -1,16 +1,128 @@
-# React + Vite
+# 🔥 React Context API — Complete Guide (Step-by-Step)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Agar tumne ye README dhang se samajh li, to Context API kabhi confuse nahi karega.  
+Yeh ekdum clear flow + real-world approach me likha gaya hai.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+# 🧠 Context API kya hai?
 
-## React Compiler
+Context API ek tarika hai jisse hum data ko globally share kar sakte hain  
+👉 bina prop drilling ke (props ko baar-baar pass kiye bina)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 📌 Use cases:
+- Products data
+- User authentication
+- Theme (dark/light mode)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+# 🚀 Step-by-Step Implementation
+
+---
+
+## ✅ Step 1: Context Folder banao
+
+---
+
+## ✅ Step 2: Context create karo
+
+```jsx
+import { createContext } from "react";
+
+/*
+🔥🔥 IMPORTANT YAAD RAKHNA 🔥🔥
+
+createContext() hamesha component ke BAHAR likhna hai
+
+❌ Galat:
+function Context(){
+  const productContext = createContext();
+}
+
+✅ Sahi:
+file ke top par likho (component ke bahar)
+*/
+
+export const productContext = createContext();
+
+---
+
+## ✅ Step 3: Context Provider Component banao
+
+```jsx
+import React, { useEffect, useState } from "react";
+import { productContext } from "./Context";
+
+function Context({ children }) {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const getApiData = async () => {
+      const res = await fetch("https://fakestoreapi.com/products");
+      const data = await res.json();
+      setData(data);
+    };
+    getApiData();
+  }, []);
+
+  return (
+    <productContext.Provider value={{ data }}>
+      {children}
+    </productContext.Provider>
+  );
+}
+
+export default Context;
+
+
+
+---
+
+## ✅ Step 4: App ko wrap karo
+import Context from "./context/Context";
+import App from "./App";
+
+/*
+🔥🔥 MOST IMPORTANT STEP 🔥🔥
+
+Agar App ko Context se wrap nahi kiya,
+to useContext() kabhi kaam nahi karega ❌
+*/
+
+<Context>
+  <App />
+</Context>
+
+
+
+---
+
+## ✅ Step 5: Data use karo (Consumer side)
+import { useContext } from "react";
+import { productContext } from "../context/Context";
+
+function Products() {
+  const { data } = useContext(productContext);
+
+  console.log(data);
+
+  return (
+    <div>
+      <h1>Products</h1>
+    </div>
+  );
+}
+
+export default Products;
+
+/*
+🔥 IMPORTANT YAAD RAKHNA 🔥
+
+Agar tumne value={{ data }} diya hai,
+to yaha destructuring karna padega:
+
+✅ const { data } = useContext(productContext);
+
+❌ const data = useContext(productContext);
+*/
